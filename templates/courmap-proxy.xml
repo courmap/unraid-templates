@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>Courmap Proxy</Name>
+  <Repository>ghcr.io/courmap/proxy:latest</Repository>
+  <Registry>https://github.com/courmap/courmap/pkgs/container/proxy</Registry>
+  <Network>bridge</Network>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/courmap/courmap/issues</Support>
+  <Project>https://courmap.com</Project>
+  <Overview>Courmap Proxy sits between your indexers (usually through Prowlarr) and Sonarr. It recognizes anime release names and rewrites the ones it is sure about, so Sonarr imports each release as the right episode. Releases it is unsure about pass through unchanged.&#13;
+&#13;
+Setup guide: https://courmap.com/getting-started/sonarr/</Overview>
+  <Category>Downloaders: MediaApp:Video</Category>
+  <WebUI>http://[IP]:[PORT:9797]/</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/courmap/unraid-templates/main/templates/courmap-proxy.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/courmap/courmap/main/assets/logo.png</Icon>
+  <ExtraParams>--user 99:100</ExtraParams>
+  <License>Apache-2.0</License>
+  <Config Name="Status page port" Target="9797" Default="9797" Mode="tcp" Description="The proxy's status page, and the address Sonarr uses to reach each indexer (for example http://courmap-proxy:9797/tracker)." Type="Port" Display="always" Required="true" Mask="false">9797</Config>
+  <Config Name="Data" Target="/data" Default="/mnt/user/appdata/courmap-proxy/data" Mode="rw" Description="Downloaded Courmap data and the unresolved release log. If the status page says the data folder is not writable, run chown -R 99:100 /mnt/user/appdata/courmap-proxy in the Unraid terminal." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/courmap-proxy/data</Config>
+  <Config Name="Config" Target="/config" Default="/mnt/user/appdata/courmap-proxy/config" Mode="rw" Description="Optional courmap-proxy.yaml with the same settings as the variables below. Environment variables win over it." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/courmap-proxy/config</Config>
+  <Config Name="Sonarr URL" Target="SONARR_URL" Default="http://sonarr:8989" Mode="" Description="Address of your Sonarr. Without it and the API key, every release passes through unchanged. Use the host's IP address if the containers are not on one network." Type="Variable" Display="always" Required="true" Mask="false">http://sonarr:8989</Config>
+  <Config Name="Sonarr API key" Target="SONARR_API_KEY" Default="" Mode="" Description="Your Sonarr API key (Sonarr, Settings, General). The proxy uses it to read your series list." Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="Indexer URL" Target="INDEXER_TRACKER_URL" Default="" Mode="" Description="One upstream Torznab or Newznab feed, usually a Prowlarr indexer such as http://prowlarr:9696/1/api (the number is the indexer's ID in Prowlarr). The name between INDEXER_ and _URL is a label you choose: TRACKER is served at /tracker, lowercase, with underscores turned into hyphens. Add more indexers as extra variables, for example INDEXER_NYAA_URL." Type="Variable" Display="always" Required="true" Mask="false"></Config>
+  <Config Name="Indexer type" Target="INDEXER_TRACKER_TYPE" Default="" Mode="" Description="Leave blank for torrents. Set to newznab for a usenet indexer. When blank, the proxy detects the type from the feed's first results. Change TRACKER to match the label of the indexer above." Type="Variable" Display="always" Required="false" Mask="false"></Config>
+  <Config Name="Sonarr refresh minutes" Target="SONARR_REFRESH_MINUTES" Default="60" Mode="" Description="How often the Sonarr series list is reloaded." Type="Variable" Display="advanced-hide" Required="false" Mask="false">60</Config>
+  <Config Name="Data refresh hours" Target="REFRESH_HOURS" Default="24" Mode="" Description="How often the Courmap data release is checked. A new dump is downloaded only when the data version changes." Type="Variable" Display="advanced-hide" Required="false" Mask="false">24</Config>
+  <Config Name="Upstream cache seconds" Target="UPSTREAM_CACHE_SECONDS" Default="60" Mode="" Description="Identical queries to an indexer within this time share one request. 0 turns the cache off." Type="Variable" Display="advanced-hide" Required="false" Mask="false">60</Config>
+</Container>
